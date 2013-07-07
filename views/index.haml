@@ -1,1 +1,56 @@
-hoge
+%button{:onclick => 'window.play();'} play
+%button{:onclick => 'window.stop();'} stop
+
+:coffeescript
+  context = new webkitAudioContext()
+  masterGain = context.createGain()
+  masterGain.connect context.destination
+  masterGain.gain.value = 0.2
+  
+  nextNoteTime = 0
+  currentNote = 0
+  noteLength = 0.25
+  tempo = 60
+  noteMax = 16
+  timer = null
+  
+  window.play = ->
+    return if timer
+    
+    nextNoteTime = context.currentTime
+    currentNote = 0
+    schedule()
+
+  window.stop = ->
+    clearInterval timer
+    timer = null
+  
+  schedule = ->
+    while nextNoteTime < context.currentTime + 0.200
+      scheduleNote(currentNote, nextNoteTime)
+      nextNote()
+    timer = setTimeout(schedule, 0)
+      
+  scheduleNote = (note, time) ->
+    gain = context.createGain()
+    gain.gain.setTargetAtTime(0, time, noteLength)
+    gain.connect masterGain
+    
+    osc = context.createOscillator()
+    osc.connect gain
+    
+    switch note
+      when 0 then freq = 880
+      when 4, 8, 12 then freq = 440
+      else freq = 220
+    osc.frequency.value = freq
+    
+    osc.start time
+    osc.stop time + noteLength
+  
+  nextNote = ->
+    secondsPerBeat = 60.0 / tempo
+    nextNoteTime += 0.25 * secondsPerBeat
+    
+    currentNote++
+    currentNote = 0 if currentNote == noteMax
