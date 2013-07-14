@@ -1,3 +1,12 @@
 #pepopo-machine
+  %ul#pepopo-machine-tracks
+
   %button#play-pepopo-machine play
   %button#stop-pepopo-machine stop
+
+%script{type:'text/template', id:'pepopo-machine-track-template'}
+  <%= frequency %>
+  %ul.pepopo-machine-notes
+
+%script{type:'text/template', id:'pepopo-machine-note-template'}
+  <%= enable ? 'o' : 'x' %>

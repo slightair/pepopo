@@ -10,7 +10,16 @@ module.exports = (grunt) ->
           join: true
           sourceMap: true
         files:
-          'js/pepopo.js': ['coffee/**/*.coffee']
+          'js/pepopo.js': [
+            'coffee/app.coffee',
+            'coffee/note.coffee',
+            'coffee/note-view.coffee',
+            'coffee/note-list.coffee',
+            'coffee/track.coffee',
+            'coffee/track-view.coffee',
+            'coffee/track-list.coffee',
+            'coffee/machine.coffee',
+          ]
     uglify:
       compile:
         options:
