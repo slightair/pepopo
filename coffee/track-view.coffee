@@ -1,5 +1,4 @@
 class Pepopo.TrackView extends Backbone.View
-  tagName: 'li'
   className: 'pepopo-machine-track'
   render: ->
     @.$el.html(_.template($('#pepopo-machine-track-template').html(), @model.toJSON()))

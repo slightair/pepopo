@@ -8,7 +8,6 @@ class Pepopo.MachineView extends Backbone.View
 
     @nextNoteTime = 0
     @currentNote = 0
-    @noteLength = 0.25
     @tempo = 60
     @noteMax = 16
     @timer = null
@@ -41,21 +40,8 @@ class Pepopo.MachineView extends Backbone.View
 
   schedule: =>
     while @nextNoteTime < @context.currentTime + 0.200
-      gain = @context.createGain()
-      gain.gain.setTargetAtTime(0, @nextNoteTime, @noteLength)
-      gain.connect @masterGain
-
-      osc = @context.createOscillator()
-      osc.connect gain
-
-      switch @currentNote
-        when 0 then freq = 880
-        when 4, 8, 12 then freq = 440
-        else freq = 220
-      osc.frequency.value = freq
-
-      osc.start @nextNoteTime
-      osc.stop @nextNoteTime + @noteLength
+      Pepopo.Tracks.each (track) =>
+        track.schedule @currentNote, @nextNoteTime
 
       secondsPerBeat = 60.0 / @tempo
       @nextNoteTime += 0.25 * secondsPerBeat
